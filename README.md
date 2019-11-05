@@ -27,7 +27,7 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 - **Step 2:** Clone the repository
 
   ```bash
-  git clone
+  git clone https://github.com/appbaseio/arc-dockerized.git && cd arc-dockerized
   ```
 
 - **Step 3:** Build and run docker containers
