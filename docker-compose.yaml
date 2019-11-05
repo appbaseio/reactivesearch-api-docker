@@ -1,6 +1,7 @@
 version: "3.4"
 services:
   arc:
+    # TODO: change to live arc image
     container_name: arc
     image: arc
     restart: always
@@ -12,6 +13,7 @@ services:
     ports:
       - 8000:8000
   arc_configure:
+    # TODO: change to live arc_configure image
     container_name: arc_configure
     image: arc-config
     restart: always
