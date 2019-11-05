@@ -46,4 +46,8 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
 - **Step 6:** Configure ElasticSearch URL and ARC ID obtained above.
 
-- **Step 7:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/) with configurations set above.
+  > **NOte:** Once you save the configuration, it may take 5-10s to restart the arc service.
+
+- **Step 7:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/). Here you will have to input Arc Cluster URL which will be [http://localhost_OR_cluster_url:8000](http://localhost_OR_cluster_url:8000) and credentials would be the one that you configured initially on _Step 5_.
+
+  > **Note:** Arc service is exposed via port `8000` so make sure port `8000` is set in your inbound rules for the cluster.
