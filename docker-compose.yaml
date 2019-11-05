@@ -1,0 +1,33 @@
+version: "3.4"
+services:
+  arc:
+    container_name: arc
+    image: arc
+    restart: always
+    command: --env="/arc-data/.env"
+    depends_on:
+      - "watcher"
+    volumes:
+      - "arc-data:/arc-data"
+    ports:
+      - 8000:8000
+  arc_configure:
+    container_name: arc_configure
+    image: arc-config
+    restart: always
+    depends_on:
+      - "watcher"
+    volumes:
+      - "arc-data:/arc-data"
+    ports:
+      - 8080:8080
+  watcher:
+    build: ./watcher
+    container_name: arc_watcher
+    volumes:
+      - "arc-data:/arc-data"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+volumes:
+  arc-data:
+    external: false
+    name: arc-data
