@@ -4,17 +4,17 @@ This setup enables you to run [Arc](https://arc-site.netlify.com/) with single c
 
 Dockerize setup for Arc comes with 3 different services
 
-## Arc
+#### Arc
 
 Allows you to access all [Appbase.io](https://docs.appbase.io/docs/gettingstarted/WhyAppbase/) features like search preview, actionable analytics and granular security with any ElasticSearch cluster hosted anywhere.
 
 > **Note:** Make sure your arc container have complete access to ElasticSearch. You can use ElasticSearch URL with Basic Auth in configuring dashboard or IP restricted ElasticSearch URL where IP of your ARC cluster hosted using docker setup is white listed.
 
-## Configure
+#### Configure
 
 This service comes with simple user interface which allows you to set credentials and other environment variables, that are required by the above service.
 
-## Watcher
+#### Watcher
 
 This services keeps eye on the environment file and restarts the arc service, whenever configurations are changed.
 
