@@ -13,7 +13,7 @@ services:
       - 8000:8000
   arc_configure:
     container_name: arc_configure
-    image: appbaseio/arc-config:0.1.0
+    image: appbaseio/arc-config:0.1.1
     restart: always
     depends_on:
       - "watcher"
