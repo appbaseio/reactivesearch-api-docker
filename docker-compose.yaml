@@ -13,9 +13,8 @@ services:
     ports:
       - 8000:8000
   arc_configure:
-    # TODO: change to live arc_configure image
     container_name: arc_configure
-    image: arc-config
+    image: appbaseio/arc-config:0.1.0
     restart: always
     depends_on:
       - "watcher"
