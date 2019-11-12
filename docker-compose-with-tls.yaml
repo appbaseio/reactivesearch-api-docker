@@ -19,7 +19,6 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/nginx.conf
       - ./nginx/certs:/etc/ssl/certs/
-      - ./nginx/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf
       - ./nginx/error.html:/etc/nginx/html/50x.html
     ports:
       - 80:80
