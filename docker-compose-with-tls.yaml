@@ -3,7 +3,7 @@ services:
   nginx:
   arc:
     container_name: arc
-    image: arc
+    image: appbaseio/arc:7.6.0
     restart: always
     command: --env="/arc-data/.env"
     depends_on:
