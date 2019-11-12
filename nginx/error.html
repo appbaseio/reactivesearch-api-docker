@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>The page is temporarily unavailable</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+      body {
+        background-color: #f8fafc;
+        color: #000;
+        font-size: 0.9em;
+        font-family: sans-serif, helvetica;
+        margin: 0;
+        padding: 0;
+      }
+      .app-container {
+        min-height: 100vh;
+        min-width: 100vw;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .app-card {
+        background-color: #fff;
+        border-radius: 4px;
+        padding: 20px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.02),
+          0 5px 22px -8px rgba(0, 0, 0, 0.1);
+        display: block;
+        width: 33.33%;
+        text-align: center;
+      }
+      .logo {
+        border-radius: 4px;
+        height: 100px;
+        width: 100px;
+      }
+      .title {
+        color: indianred;
+      }
+
+      /*]]>*/
+    </style>
+  </head>
+
+  <body>
+    <div class="app-container">
+      <div class="app-card">
+        <img class="logo" src="https://i.imgur.com/T562RBE.png" alt="logo" />
+        <h2 class="title">
+          <strong>Arc Instance isn't running or setup yet!</strong>
+        </h2>
+        <p>
+          If you are the admin, you can configure Arc by going to
+          <a id="configure-link">configure page</a>. If you have already setup
+          Arc and are seeing issues, you can see the logs using
+          <code>sudo docker logs arc</code>. If you are unable to debug the
+          issue, you can reach out for support at
+          <a href="mailto:support@appbase.io">support@appbase.io</a> with the
+          logs.
+        </p>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+        var configUrl = "http://" + window.location.hostname + ":8080";
+        var urlNode = document.getElementById("configure-link");
+        if (urlNode) {
+          urlNode.href = configUrl;
+        }
+      });
+    </script>
+  </body>
+</html>
