@@ -12,11 +12,11 @@ Allows you to access all [Appbase.io](https://docs.appbase.io/docs/gettingstarte
 
 #### Configure
 
-This service comes with simple user interface which allows you to set credentials and other environment variables, that are required by the above service.
+This service comes with simple user interface which allows you to set credentials and other environment variables. Also it watches for environment variable file changes, so that if any variable in file is changed it can restart arc service.
 
-#### Watcher
+#### Nginx
 
-This services keeps eye on the environment file and restarts the arc service, whenever configurations are changed.
+This service helps in setting up reverse proxy for Arc Service and serving Configuration service. It also helps in serving data using with TLS certificate, which is recommended for production.
 
 ## Quick Start 🚀
 
@@ -32,18 +32,12 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
 - **Step 3:** Build and run docker containers
 
-  We highly recommend using Arc with [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) so that we can easily bind this with Arc Dashboard. To simplify the process of docker build and deployment we have created 3 versions:
-
-  1 - Install Arc _(If you have your own Nginx / SSL setup)_
-
-  ```bash
-  docker-compose up -d
-  ```
+  We highly recommend using Arc with [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) so that we can easily bind this with Arc Dashboard. To simplify the process of docker build, test and deployment we have created 2 versions:
 
   2 - Install Arc + Nginx with SSL setup _(Recommended for production)_
 
   - Change [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and keys with production files. Please obtain [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and key for your domain using [Let's Encrypt](https://letsencrypt.org/) or any other provider. Update the files in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs)
-  - In case you are using different name then mentioned in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs) folder, then please update them in `docker-compose-with-tls.yaml` file as well
+  - In case you are using different name then mentioned in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs) folder, then please update them in `docker-compose.yaml` file as well
 
   ![](https://i.imgur.com/piUKTLl.png)
 
@@ -52,10 +46,10 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
   ![](https://i.imgur.com/LW8zOyB.png)
 
   ```bash
-  docker-compose -f docker-compose-with-tls.yaml up -d
+  docker-compose up -d
   ```
 
-  3 - Install Arc + ElasticSearch _(If you want to deploy Arc Along with ElasticSearch)_
+  3 - Install Arc + ElasticSearch _(If you want to deploy Arc Along with ElasticSearch.)_
 
   ```
   docker-compose -f docker-compose-with-elasticsearch.yaml up -d
@@ -63,9 +57,9 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
   🔥 Thats all, our containers should be up and running. Next let us configure environment variables required by Arc service.
 
-- **Step 4:** Open configuration service URL in your browser, i.e. [http://localhost_OR_cluster_url:8080](http://localhost/CLUStER_URL:8080)
+- **Step 4:** Open configuration service URL in your browser, i.e. [http://localhost_OR_cluster_url](http://localhost/CLUStER_URL)
 
-  > **Note:** If you are running this setup on an virtual machine, make sure port `8080` is set in your inbound rules for the cluster.
+  > **Note:** If you are running this setup on an virtual machine, make sure ports `80` and `443` are set in your inbound rules for the cluster.
 
 - **Step 5:** Set credentials
 
@@ -73,6 +67,4 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
   > **NOte:** Once you save the configuration, it may take 5-10s to restart the arc service.
 
-- **Step 7:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/). Here you will have to input Arc Cluster URL which will be [http(s)://localhost_OR_cluster_url(:8000)](<http(s)://localhost_OR_cluster_url(:8000)>) and credentials would be the one that you configured initially on _Step 5_.
-
-  > **Note:** Arc service is exposed via port `8000` so make sure port `8000` is set in your inbound rules for the cluster.
+- **Step 7:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/). Here you will have to input Arc Cluster URL which will be [http(s)://localhost_OR_cluster_url](<http(s)://localhost_OR_cluster_url>) and credentials would be the one that you configured initially on _Step 5_.
