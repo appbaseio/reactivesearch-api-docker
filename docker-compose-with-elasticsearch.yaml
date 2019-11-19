@@ -17,28 +17,37 @@ services:
     restart: always
     command: --env="/arc-data/.env"
     depends_on:
-      - "watcher"
+      - "arc_configure"
     volumes:
       - "arc-data:/arc-data"
     ports:
       - 8000:8000
+  nginx:
+    container_name: arc_nginx
+    image: nginx:1.17-alpine
+    restart: always
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs:/etc/ssl/certs/
+      - ./nginx/error.html:/etc/nginx/html/50x.html
+      - "www:/var/www/html"
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - arc_configure
   arc_configure:
     container_name: arc_configure
-    image: appbaseio/arc-config:0.1.1
+    image: appbaseio/arc-config:0.1.5
     restart: always
-    depends_on:
-      - "watcher"
     volumes:
       - "arc-data:/arc-data"
-    ports:
-      - 8080:8080
-  watcher:
-    build: ./watcher
-    container_name: arc_watcher
-    volumes:
-      - "arc-data:/arc-data"
+      - "www:/var/www/html"
       - "/var/run/docker.sock:/var/run/docker.sock"
 volumes:
   arc-data:
     external: false
     name: arc-data
+  www:
+    external: false
+    name: www
