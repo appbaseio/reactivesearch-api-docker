@@ -34,7 +34,7 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
   We highly recommend using Arc with [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) so that we can easily bind this with Arc Dashboard. To simplify the process of docker build, test and deployment we have created 2 versions:
 
-  2 - Install Arc + Nginx with SSL setup _(Recommended for production)_
+  1 - **Install Arc + Nginx with SSL setup _(Recommended for production)_**
 
   - Change [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and keys with production files. Please obtain [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and key for your domain using [Let's Encrypt](https://letsencrypt.org/) or any other provider. Update the files in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs)
   - In case you are using different name then mentioned in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs) folder, then please update them in `docker-compose.yaml` file as well
@@ -49,7 +49,7 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
   docker-compose up -d
   ```
 
-  3 - Install Arc + ElasticSearch _(If you want to deploy Arc Along with ElasticSearch.)_
+  2 - **Install Arc + ElasticSearch _(If you want to deploy Arc Along with ElasticSearch.)_**
 
   ```
   docker-compose -f docker-compose-with-elasticsearch.yaml up -d
