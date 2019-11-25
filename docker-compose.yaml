@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.4'
 services:
   arc:
     container_name: arc
@@ -6,9 +6,9 @@ services:
     restart: always
     command: --env="/arc-data/.env"
     depends_on:
-      - "arc_configure"
+      - 'arc_configure'
     volumes:
-      - "arc-data:/arc-data"
+      - 'arc-data:/arc-data'
     ports:
       - 8000:8000
   nginx:
@@ -19,7 +19,7 @@ services:
       - ./nginx/default.conf:/etc/nginx/nginx.conf
       - ./nginx/certs:/etc/ssl/certs/
       - ./nginx/error.html:/etc/nginx/html/50x.html
-      - "www:/var/www/html"
+      - 'www:/var/www/html'
     ports:
       - 80:80
       - 443:443
@@ -27,12 +27,12 @@ services:
       - arc_configure
   arc_configure:
     container_name: arc_configure
-    image: appbaseio/arc-config:0.1.7
+    image: appbaseio/arc-config:0.1.8
     restart: always
     volumes:
-      - "arc-data:/arc-data"
-      - "www:/var/www/html"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - 'arc-data:/arc-data'
+      - 'www:/var/www/html'
+      - '/var/run/docker.sock:/var/run/docker.sock'
 volumes:
   arc-data:
     external: false
