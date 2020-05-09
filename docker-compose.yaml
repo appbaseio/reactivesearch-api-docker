@@ -2,7 +2,7 @@ version: '3.4'
 services:
   arc:
     container_name: arc
-    image: appbaseio/arc:7.19.2
+    image: appbaseio/arc:7.23.1
     restart: always
     command: --env="/arc-data/.env"
     depends_on:

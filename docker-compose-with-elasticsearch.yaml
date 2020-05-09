@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.4.2
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.2
     container_name: elasticsearch
     environment:
       - node.name=elasticsearch
@@ -13,7 +13,7 @@ services:
       - '9300:9300'
   arc:
     container_name: arc
-    image: appbaseio/arc:7.19.2
+    image: appbaseio/arc:7.23.1
     restart: always
     command: --env="/arc-data/.env"
     depends_on:
