@@ -34,7 +34,7 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
   Arc internally uses [Fluentbit](https://fluentbit.io/) to log the requests and provide analytics on top of that. In order to setup fluentbit, update `fluent-bit.conf` with ElasticSearch `Host`, `Port`, `tls`, `HTTP_User` and `HTTP_Passwd` information.
 
-- **Step 3:** Build and run docker containers
+- **Step 4:** Build and run docker containers
 
   We highly recommend using Arc with [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) so that we can easily bind this with Arc Dashboard. To simplify the process of docker build, test and deployment we have created 2 versions:
 
@@ -65,14 +65,14 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
   🔥 Thats all, our containers should be up and running. Next let us configure environment variables required by Arc service.
 
-- **Step 4:** Open configuration service URL in your browser, i.e. [http://localhost_OR_cluster_url](http://localhost/CLUStER_URL)
+- **Step 5:** Open configuration service URL in your browser, i.e. [http://localhost_OR_cluster_url](http://localhost/CLUStER_URL)
 
   > **Note:** If you are running this setup on an virtual machine, make sure ports `80` and `443` are set in your inbound rules for the cluster.
 
-- **Step 5:** Set credentials
+- **Step 6:** Set credentials
 
-- **Step 6:** Configure ElasticSearch URL and ARC ID obtained above.
+- **Step 7:** Configure ElasticSearch URL and ARC ID obtained above.
 
   > **NOte:** Once you save the configuration, it may take 5-10s to restart the arc service.
 
-- **Step 7:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/). Here you will have to input Arc Cluster URL which will be [http(s)://localhost_OR_cluster_url](<http(s)://localhost_OR_cluster_url>) and credentials would be the one that you configured initially on _Step 5_.
+- **Step 8:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/). Here you will have to input Arc Cluster URL which will be [http(s)://localhost_OR_cluster_url](<http(s)://localhost_OR_cluster_url>) and credentials would be the one that you configured initially on _Step 5_.
