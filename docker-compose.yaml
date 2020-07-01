@@ -1,14 +1,14 @@
-version: '3.4'
+version: "3.4"
 services:
   arc:
     container_name: arc
-    image: appbaseio/arc:7.26.1
+    image: appbaseio/arc:7.28.1
     restart: always
     command: --env="/arc-data/.env"
     depends_on:
-      - 'arc_configure'
+      - "arc_configure"
     volumes:
-      - 'arc-data:/arc-data'
+      - "arc-data:/arc-data"
     ports:
       - 8000:8000
   nginx:
@@ -19,20 +19,33 @@ services:
       - ./nginx/default.conf:/etc/nginx/nginx.conf
       - ./nginx/certs:/etc/ssl/certs/
       - ./nginx/error.html:/etc/nginx/html/50x.html
-      - 'www:/var/www/html'
+      - "www:/var/www/html"
     ports:
       - 80:80
       - 443:443
     links:
       - arc_configure
-  arc_configure:
-    container_name: arc_configure
-    image: appbaseio/arc-config:0.1.9
+  fluentbit:
+    image: fluent/fluent-bit:1.0.4
+    user: root
+    container_name: fluentbit
+    command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
+    depends_on:
+      - "arc"
+      - "arc_configure"
     restart: always
     volumes:
-      - 'arc-data:/arc-data'
-      - 'www:/var/www/html'
-      - '/var/run/docker.sock:/var/run/docker.sock'
+      - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
+      - "./parser.conf:/fluent-bit/etc/parser.conf"
+      - "arc-data:/arc-data"
+  arc_configure:
+    container_name: arc_configure
+    image: appbaseio/arc-config:0.2.1
+    restart: always
+    volumes:
+      - "arc-data:/arc-data"
+      - "www:/var/www/html"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 volumes:
   arc-data:
     external: false
