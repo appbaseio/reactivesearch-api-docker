@@ -13,7 +13,7 @@ services:
       - "9300:9300"
   arc:
     container_name: arc
-    image: appbaseio/arc:7.28.1
+    image: appbaseio/arc:7.28.3
     restart: always
     command: --env="/arc-data/.env"
     depends_on:
