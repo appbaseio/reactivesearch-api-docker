@@ -33,14 +33,15 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 - **Step 3:** Configure logging system
 
   Arc internally uses [Fluentbit](https://fluentbit.io/) to log the requests and provide analytics on top of that. In order to setup fluentbit, update `fluent-bit.conf` with ElasticSearch `Host`, `Port`, `tls`, `HTTP_User` and `HTTP_Passwd` information.
+  
+  ![](https://www.dropbox.com/s/ucaj3gtdj331j9v/Screenshot%202020-07-01%2011.49.34.png?raw=1)
+
+  > **Note:** If you are using `docker-compose-with-elasticsearch.yaml` then you don't need to change any configurations in
+
 
 - **Step 4:** Build and run docker containers
 
   We highly recommend using Arc with [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) so that we can easily bind this with Arc Dashboard. To simplify the process of docker build, test and deployment we have created 2 versions:
-
-  ![](https://www.dropbox.com/s/ucaj3gtdj331j9v/Screenshot%202020-07-01%2011.49.34.png?raw=1)
-
-  > **Note:** If you are using `docker-compose-with-elasticsearch.yaml` then you don't need to change any configurations in
 
   1 - **Install Arc + Nginx with SSL setup _(Recommended for production)_**
 
