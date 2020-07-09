@@ -7,6 +7,15 @@ services:
       - node.name=elasticsearch
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.port=9200
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
+      - network.publish_host=_local_
+      - network.host=_local_,_site_
+      - transport.host=127.0.0.1
+      - http.host=0.0.0.0
     user: elasticsearch
     ports:
       - "9200:9200"
@@ -51,7 +60,7 @@ services:
       - "arc-data:/arc-data"
   arc_configure:
     container_name: arc_configure
-    image: appbaseio/arc-config:0.2.1
+    image: appbaseio/arc-config:0.2.2
     restart: always
     volumes:
       - "arc-data:/arc-data"

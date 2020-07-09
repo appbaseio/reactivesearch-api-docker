@@ -22,6 +22,8 @@ This service helps in setting up reverse proxy for Arc Service and serving Confi
 
 The steps described here assumes a [docker](https://docs.docker.com/install/) installation on the system.
 
+> Note: If you have used arc-docker setup earlier, you might need to clear `www` volume to get fresh copy of arc configuration page. Please remove containers associated with `www` volume `docker container rm ContainerID` and then run `docker volume rm www`
+
 - **Step 1:** Get Arc ID following the steps mentioned [here](https://docs.appbase.io/docs/hosting/BYOC/#using-ami)
 
 - **Step 2:** Clone the repository
