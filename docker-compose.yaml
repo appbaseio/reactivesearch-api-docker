@@ -40,7 +40,7 @@ services:
       - "arc-data:/arc-data"
   arc_configure:
     container_name: arc_configure
-    image: appbaseio/arc-config:0.2.3
+    image: appbaseio/arc-config:0.2.4
     restart: always
     volumes:
       - "arc-data:/arc-data"
