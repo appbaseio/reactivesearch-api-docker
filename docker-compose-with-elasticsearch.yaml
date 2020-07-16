@@ -22,7 +22,7 @@ services:
       - "9300:9300"
   arc:
     container_name: arc
-    image: appbaseio/arc:7.29.0
+    image: appbaseio/arc:7.29.1
     restart: always
     command: --env="/arc-data/.env"
     depends_on:
@@ -46,7 +46,7 @@ services:
     links:
       - arc_configure
   fluentbit:
-    image: fluent/fluent-bit:1.0.4
+    image: fluent/fluent-bit:1.5
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
