@@ -1,10 +1,10 @@
-# Arc: Dockerize Setup
+# Appbase.io: Dockerize Setup
 
 This setup enables you to run [Arc](https://arc-site.netlify.com/) with single command, i.e. `docker-compose up -d` 😎.
 
 Dockerize setup for Arc comes with 3 different services
 
-#### Arc
+#### appbase
 
 Allows you to access all [Appbase.io](https://docs.appbase.io/docs/gettingstarted/WhyAppbase/) features like search preview, actionable analytics and granular security with any Elasticsearch cluster hosted anywhere.
 

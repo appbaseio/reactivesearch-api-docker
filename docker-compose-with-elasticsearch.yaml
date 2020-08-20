@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.1
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.9.0
     container_name: elasticsearch
     restart: always
     environment:
@@ -21,19 +21,19 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
-  arc:
-    container_name: arc
-    image: appbaseio/arc:7.31.0
+  appbase:
+    container_name: appbase
+    image: appbaseio/arc:7.31.1
     restart: always
-    command: --env="/arc-data/.env"
+    command: --env="/appbase-data/.env"
     depends_on:
-      - "arc_configure"
+      - "appbase_configure"
     volumes:
-      - "arc-data:/arc-data"
+      - "appbase-data:/appbase-data"
     ports:
       - 8000:8000
   nginx:
-    container_name: arc_nginx
+    container_name: appbase_nginx
     image: nginx:1.17-alpine
     restart: always
     volumes:
@@ -45,32 +45,32 @@ services:
       - 80:80
       - 443:443
     links:
-      - arc_configure
+      - appbase_configure
   fluentbit:
     image: fluent/fluent-bit:1.5
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
-      - "arc"
-      - "arc_configure"
+      - "appbase"
+      - "appbase_configure"
     restart: always
     volumes:
       - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
       - "./parser.conf:/fluent-bit/etc/parser.conf"
-      - "arc-data:/arc-data"
-  arc_configure:
-    container_name: arc_configure
-    image: appbaseio/arc-config:0.2.4
+      - "appbase-data:/appbase-data"
+  appbase_configure:
+    container_name: appbase_configure
+    image: appbaseio/arc-config:0.2.5
     restart: always
     volumes:
-      - "arc-data:/arc-data"
+      - "appbase-data:/appbase-data"
       - "www:/var/www/html"
       - "/var/run/docker.sock:/var/run/docker.sock"
 volumes:
-  arc-data:
+  appbase-data:
     external: false
-    name: arc-data
+    name: appbase-data
   www:
     external: false
     name: www
