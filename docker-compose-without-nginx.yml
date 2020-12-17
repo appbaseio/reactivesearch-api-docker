@@ -31,7 +31,7 @@ services:
       - USERNAME=foo
       - PASSWORD=bar
       - SET_SNIFFING=false
-      - APPBASE_ID=172f5342-7aca-4c4d-a93d-0bf44b58fc99 
+      - APPBASE_ID=YOUR_APPBASE_ID 
       - ES_CLUSTER_URL=http://elasticsearch:9200
     volumes:
       - "appbase-data:/appbase-data"
