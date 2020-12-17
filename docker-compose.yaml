@@ -17,7 +17,7 @@ services:
     restart: always
     volumes:
       - ./nginx/default.conf:/etc/nginx/nginx.conf
-      - ./appbase-logo.svg:/etc/nginx/appbase-logo.svg
+      - ./appbase-logo.svg:/etc/nginx/html/appbase-logo.svg
       - ./nginx/certs:/etc/ssl/certs/
       - ./nginx/error.html:/etc/nginx/html/50x.html
       - "www:/var/www/html"
@@ -41,7 +41,7 @@ services:
       - "appbase-data:/appbase-data"
   appbase_configure:
     container_name: appbase_configure
-    image: appbaseio/arc-config:0.2.5
+    image: appbaseio/arc-config:0.2.6
     restart: always
     volumes:
       - "appbase-data:/appbase-data"

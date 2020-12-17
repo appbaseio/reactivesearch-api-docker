@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.9.0
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.9.3
     container_name: elasticsearch
     restart: always
     environment:
@@ -17,35 +17,28 @@ services:
       - network.host=_local_,_site_
       - transport.host=127.0.0.1
       - http.host=0.0.0.0
-    user: elasticsearch
     ports:
       - "9200:9200"
-      - "9300:9300"
+    networks:
+      - elasticsearch
   appbase:
     container_name: appbase
     image: appbaseio/arc:7.37.0
     restart: always
-    command: --env="/appbase-data/.env"
     depends_on:
-      - "appbase_configure"
+      - elasticsearch
+    environment:
+      - USERNAME=foo
+      - PASSWORD=bar
+      - SET_SNIFFING=false
+      - APPBASE_ID=172f5342-7aca-4c4d-a93d-0bf44b58fc99 
+      - ES_CLUSTER_URL=http://elasticsearch:9200
     volumes:
       - "appbase-data:/appbase-data"
     ports:
       - 8000:8000
-  nginx:
-    container_name: appbase_nginx
-    image: nginx:1.17-alpine
-    restart: always
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/nginx.conf
-      - ./nginx/certs:/etc/ssl/certs/
-      - ./nginx/error.html:/etc/nginx/html/50x.html
-      - "www:/var/www/html"
-    ports:
-      - 80:80
-      - 443:443
-    links:
-      - appbase_configure
+    networks:
+      - elasticsearch
   fluentbit:
     image: fluent/fluent-bit:1.5
     user: root
@@ -53,24 +46,14 @@ services:
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
       - "appbase"
-      - "appbase_configure"
     restart: always
     volumes:
       - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
       - "./parser.conf:/fluent-bit/etc/parser.conf"
       - "appbase-data:/appbase-data"
-  appbase_configure:
-    container_name: appbase_configure
-    image: appbaseio/arc-config:0.2.6
-    restart: always
-    volumes:
-      - "appbase-data:/appbase-data"
-      - "www:/var/www/html"
-      - "/var/run/docker.sock:/var/run/docker.sock"
 volumes:
   appbase-data:
     external: false
-    name: appbase-data
-  www:
-    external: false
-    name: www
+networks:
+  elasticsearch:
+    driver: bridge
