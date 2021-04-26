@@ -35,6 +35,7 @@ services:
       - ES_CLUSTER_URL=http://elasticsearch:9200
     volumes:
       - "appbase-data:/appbase-data"
+      - /etc/machine-id:/etc/machine-id
     ports:
       - 8000:8000
     networks:

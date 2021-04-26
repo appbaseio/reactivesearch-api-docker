@@ -9,6 +9,7 @@ services:
       - "appbase_configure"
     volumes:
       - "appbase-data:/appbase-data"
+      - /etc/machine-id:/etc/machine-id
     ports:
       - 8000:8000
   nginx:
