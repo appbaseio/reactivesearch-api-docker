@@ -23,7 +23,7 @@ services:
       - "9300:9300"
   appbase:
     container_name: appbase
-    image: appbaseio/arc:7.42.0
+    image: appbaseio/arc:7.43.0
     restart: always
     command: --env="/appbase-data/.env"
     depends_on:
@@ -62,7 +62,7 @@ services:
       - "appbase-data:/appbase-data"
   appbase_configure:
     container_name: appbase_configure
-    image: appbaseio/arc-config:0.2.6
+    image: appbaseio/arc-config:0.2.7
     restart: always
     volumes:
       - "appbase-data:/appbase-data"
