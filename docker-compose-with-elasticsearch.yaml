@@ -23,14 +23,13 @@ services:
       - "9300:9300"
   appbase:
     container_name: appbase
-    image: appbaseio/arc:7.44.0
+    image: appbaseio/arc:7.45.0
     restart: always
     command: --env="/appbase-data/.env"
     depends_on:
       - "appbase_configure"
     volumes:
       - "appbase-data:/appbase-data"
-      - /etc/machine-id:/etc/machine-id
     ports:
       - 8000:8000
   nginx:
