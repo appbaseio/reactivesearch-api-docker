@@ -23,7 +23,7 @@ services:
       - elasticsearch
   appbase:
     container_name: appbase
-    image: appbaseio/arc:7.45.0
+    image: appbaseio/arc:7.45.1
     restart: always
     depends_on:
       - elasticsearch
