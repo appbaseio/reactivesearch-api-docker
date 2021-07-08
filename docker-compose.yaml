@@ -2,7 +2,7 @@ version: "3.4"
 services:
   appbase:
     container_name: appbase
-    image: appbaseio/arc:7.45.1
+    image: appbaseio/arc:7.46.0
     restart: always
     command: --env="/appbase-data/.env"
     depends_on:
@@ -11,6 +11,8 @@ services:
       - "appbase-data:/appbase-data"
     ports:
       - 8000:8000
+    networks:
+      - elastic
   nginx:
     container_name: appbase_nginx
     image: nginx:1.17-alpine
@@ -41,7 +43,7 @@ services:
       - "appbase-data:/appbase-data"
   appbase_configure:
     container_name: appbase_configure
-    image: appbaseio/arc-config:0.2.6
+    image: appbaseio/arc-config:0.2.7
     restart: always
     volumes:
       - "appbase-data:/appbase-data"
