@@ -67,7 +67,7 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
   🔥 Thats all, our containers should be up and running. Next let us configure environment variables required by Arc service.
 
-* **Step 5:** Open configuration service URL in your browser, i.e. [http://localhost_OR_cluster_url](http://localhost/CLUStER_URL)
+* **Step 5:** Open configuration service URL in your browser, i.e. [http://localhost](http://localhost)
 
   > **Note:** If you are running this setup on an virtual machine, make sure ports `80` and `443` are set in your inbound rules for the cluster.
 
@@ -75,6 +75,30 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
 * **Step 7:** Configure Elasticsearch URL and ARC ID obtained above.
 
-  > **NOte:** Once you save the configuration, it may take 5-10s to restart the arc service.
+  > **Note:** Once you save the configuration, it may take 5-10s to restart the arc service.
 
-* **Step 8:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/). Here you will have to input Arc Cluster URL which will be [http(s)://localhost_OR_cluster_url](<http(s)://localhost_OR_cluster_url>) and credentials would be the one that you configured initially on _Step 5_.
+* **Step 8:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/). Here you will have to input Arc Cluster URL which will be [http://localhost](http://localhost) and credentials would be the one that you configured initially on **Step 5**.
+
+## Configuring TLS for development
+
+We recommend configuring TLS using the excellent [`mkcert`](https://github.com/FiloSottile/mkcert) utility. Once installed on your local system:
+
+```bash
+mkcert -key-file=nginx/certs/server.key -cert-file=nginx/certs/server.crt appbase.dev localhost
+```
+
+This will save the cert key and pem files into paths that are used by the nginx service in the `docker-compose-with-elasticsearch.yaml` file.
+
+Once the certs are configured, start the service with:
+
+```bash
+docker-compose -f docker-compose-with-elasticsearch.yaml up -d
+```
+
+You can now visit: https://localhost to get a TLS domain. For https://appbase.dev to point to appbase.io service, add the entry:
+
+```
+127.0.0.1    appbase.dev
+```
+
+in your `/etc/hosts` file.
