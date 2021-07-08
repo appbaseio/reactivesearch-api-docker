@@ -11,8 +11,6 @@ services:
       - "appbase-data:/appbase-data"
     ports:
       - 8000:8000
-    networks:
-      - elastic
   nginx:
     container_name: appbase_nginx
     image: nginx:1.17-alpine
