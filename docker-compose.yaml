@@ -2,7 +2,7 @@ version: "3.4"
 services:
   appbase:
     container_name: appbase
-    image: appbaseio/reactivesearch-api:7.54.1
+    image: appbaseio/reactivesearch-api:7.55.0
     restart: always
     command: --env="/appbase-data/.env"
     depends_on:
