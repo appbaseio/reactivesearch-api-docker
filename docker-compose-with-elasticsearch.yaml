@@ -23,7 +23,7 @@ services:
       - "9300:9300"
   appbase:
     container_name: appbase
-    image: appbaseio/reactivesearch-api:7.55.1
+    image: appbaseio/reactivesearch-api:7.56.0
     restart: always
     command: --env="/appbase-data/.env"
     depends_on:
