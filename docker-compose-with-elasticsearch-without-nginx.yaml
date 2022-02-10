@@ -23,7 +23,7 @@ services:
       - elasticsearch
   appbase:
     container_name: appbase
-    image: appbaseio/reactivesearch-api:7.57.0
+    image: appbaseio/reactivesearch-api:7.57.1
     restart: always
     depends_on:
       - elasticsearch
