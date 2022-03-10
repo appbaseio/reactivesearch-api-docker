@@ -1,22 +1,44 @@
 # Appbase.io: Dockerize Setup
 
-This setup enables you to run [Arc](https://arc-site.netlify.com/) with single command, i.e. `docker-compose up -d` 😎.
+This setup enables you to run [ReactiveSearch API server](https://reactivesearch.io/) with single command, i.e. `docker-compose up -d` 😎.
 
-Dockerize setup for Arc comes with 3 different services
+The docker-compose setup in this repository comes with four different services:
 
-#### appbase
+#### reactivesearch-api
 
-Allows you to access all [Appbase.io](https://docs.appbase.io/docs/gettingstarted/WhyAppbase/) features like search preview, actionable analytics and granular security with any Elasticsearch cluster hosted anywhere.
+`reactivesearch-api` is an opensource image providing a declarative API to query Elasticsearch, and is required by ReactiveSearch and Searchbox UI libraries. You can check out the source code over [here](https://github.com/appbaseio/reactivesearch-api).
 
-> **Note:** Make sure your arc container have complete access to Elasticsearch. You can use Elasticsearch URL with Basic Auth in configuring dashboard or IP restricted Elasticsearch URL where IP of your ARC cluster hosted using docker setup is white listed.
+It is also available as a licensed image with additional features such as search relevance, query rules, UI builder, pipelines, actionable search analytics and search access control. See [pricing](https://www.appbase.io/pricing).
 
-#### Configure
 
-This service comes with simple user interface which allows you to set credentials and other environment variables. Also it watches for environment variable file changes, so that if any variable in file is changed it can restart arc service.
+> **Note:** Make sure your rs-api container has complete access to Elasticsearch. You can secure Elasticsearch URL with Basic Auth or set an IP based restriction.
 
-#### Nginx
+#### reactivesearch-config-gui
+
+The `reactivesearch-config-gui` service comes with simple user interface that allows you to set credentials and other reactivesearch-api server related environment variables. It also watches for environment variable file changes, so that if any variable in file is changed it can restart the rs-api container.
+
+#### nginx
 
 This service helps in setting up reverse proxy for Arc Service and serving Configuration service. It also helps in serving data using with TLS certificate, which is recommended for production.
+
+#### elasticsearch
+
+The Elasticsearch service allows spinning up an Elasticsearch server instance locally. This is optional, however running this service allows for an end-to-end ReactiveSearch service setup.
+
+To run specific services only, use the following command:
+
+`docker-compose -f ${file} up -d`
+
+where ${file} can be one of the following:
+
+| file                                                     | Use Case                                                                                                                                                       |
+|----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| docker-compose-oss-with-elasticsearch-without-nginx.yaml | Run the open-source ReactiveSearch API server with Elasticsearch, but without Nginx and ReactiveSearch's config GUI.                                           |
+| docker-compose-oss-with-elasticsearch.yaml               | Run the open-source ReactiveSearch API server with Elasticsearch, Nginx and ReactiveSearch's config GUI.                                                       |
+| docker-compose-oss.yaml                                  | Run the open-source ReactiveSearch API server with Nginx and ReactiveSearch's config GUI, but without Elasticsearch (i.e. it's assumed to be hosted in cloud). |
+| docker-compose-with-elasticsearch-without-nginx.yaml     | Run the licensed ReactiveSearch API server with Elasticsearch, but without Nginx and ReactiveSearch's config GUI.                                              |
+| docker-compose-with-elasticsearch.yaml                   | Run the licensed ReactiveSearch API server with Elasticsearch, Nginx and ReactiveSearch's config GUI.                                                          |
+| docker-compose.yaml                                      | Run the licensed ReactiveSearch API server with Nginx and ReactiveSearch's config GUI, but without Elasticsearch (i.e. it's assumed to be hosted in cloud).    |
 
 ## Quick Start 🚀
 

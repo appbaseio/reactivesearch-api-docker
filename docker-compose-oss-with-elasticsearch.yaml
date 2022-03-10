@@ -1,10 +1,33 @@
 version: "3.4"
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - node.name=elasticsearch
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.port=9200
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
+      - network.publish_host=_local_
+      - network.host=_local_,_site_
+      - transport.host=127.0.0.1
+      - http.host=0.0.0.0
+    user: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:7.58.0
+    image: ghcr.io/appbaseio/reactivesearch-api:7.58.0
     restart: always
-    command: --env="/reactivesearch-data/.env"
+    environment:
+      - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
+    command: --env="/reactivesearch-data/.env" --log=info
     depends_on:
       - "reactivesearch-config-gui"
     volumes:
@@ -12,12 +35,12 @@ services:
     ports:
       - 8000:8000
   nginx:
-    container_name: appbase_nginx
+    container_name: nginx
     image: nginx:1.17-alpine
     restart: always
     volumes:
       - ./nginx/default.conf:/etc/nginx/nginx.conf
-      - ./appbase-logo.svg:/etc/nginx/html/appbase-logo.svg
+      - ./reactivesearch-logo.svg:/etc/nginx/html/reactivesearch-logo.svg
       - ./nginx/certs:/etc/ssl/certs/
       - ./nginx/error.html:/etc/nginx/html/50x.html
       - "www:/var/www/html"
@@ -41,7 +64,7 @@ services:
       - "reactivesearch-data:/reactivesearch-data"
   reactivesearch-config-gui:
     container_name: reactivesearch-config-gui
-    image: appbaseio/arc-config:0.2.8
+    image: appbaseio/reactivesearch-config-gui:0.3.0
     restart: always
     volumes:
       - "reactivesearch-data:/reactivesearch-data"

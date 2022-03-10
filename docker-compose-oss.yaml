@@ -2,13 +2,12 @@ version: "3.4"
 services:
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:7.58.0
+    image: ghcr.io/appbaseio/reactivesearch-api:7.58.0
     restart: always
-    command: --env="/reactivesearch-data/.env"
     depends_on:
-      - "reactivesearch-config-gui"
+      - reactivesearch-config-gui
     volumes:
-      - "reactivesearch-data:/reactivesearch-data"
+      - reactivesearch-data:/reactivesearch-data
     ports:
       - 8000:8000
   nginx:
@@ -17,10 +16,10 @@ services:
     restart: always
     volumes:
       - ./nginx/default.conf:/etc/nginx/nginx.conf
-      - ./appbase-logo.svg:/etc/nginx/html/appbase-logo.svg
+      - ./reactivesearch-logo.svg:/etc/nginx/html/reactivesearch-logo.svg
       - ./nginx/certs:/etc/ssl/certs/
       - ./nginx/error.html:/etc/nginx/html/50x.html
-      - "www:/var/www/html"
+      - www:/var/www/html
     ports:
       - 80:80
       - 443:443
@@ -32,21 +31,21 @@ services:
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
-      - "reactivesearch-api"
-      - "reactivesearch-config-gui"
+      - reactivesearch-api
+      - reactivesearch-config-gui
     restart: always
     volumes:
-      - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
-      - "./parser.conf:/fluent-bit/etc/parser.conf"
-      - "reactivesearch-data:/reactivesearch-data"
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./parser.conf:/fluent-bit/etc/parser.conf
+      - reactivesearch-data:/reactivesearch-data
   reactivesearch-config-gui:
     container_name: reactivesearch-config-gui
-    image: appbaseio/arc-config:0.2.8
+    image: appbaseio/reactivesearch-config-gui:0.3.0
     restart: always
     volumes:
-      - "reactivesearch-data:/reactivesearch-data"
-      - "www:/var/www/html"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - reactivesearch-data:/reactivesearch-data
+      - www:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   reactivesearch-data:
     external: false

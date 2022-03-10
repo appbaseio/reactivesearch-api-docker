@@ -21,9 +21,9 @@ services:
       - "9200:9200"
     networks:
       - elasticsearch
-  appbase:
-    container_name: appbase
-    image: appbaseio/reactivesearch-api:7.57.3
+  reactivesearch-api:
+    container_name: rs-api
+    image: appbaseio/reactivesearch-api:7.58.0
     restart: always
     depends_on:
       - elasticsearch
@@ -34,7 +34,7 @@ services:
       - APPBASE_ID=${ENTER_YOUR_APPBASE_ID}
       - ES_CLUSTER_URL=http://elasticsearch:9200
     volumes:
-      - "appbase-data:/appbase-data"
+      - "reactivesearch-data:/reactivesearch-data"
     ports:
       - 8000:8000
     networks:
@@ -45,14 +45,14 @@ services:
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
-      - "appbase"
+      - "reactivesearch-api"
     restart: always
     volumes:
       - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
       - "./parser.conf:/fluent-bit/etc/parser.conf"
-      - "appbase-data:/appbase-data"
+      - "reactivesearch-data:/reactivesearch-data"
 volumes:
-  appbase-data:
+  reactivesearch-data:
     external: false
 networks:
   elasticsearch:
