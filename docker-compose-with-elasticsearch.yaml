@@ -23,7 +23,7 @@ services:
       - "9300:9300"
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:7.58.0
+    image: appbaseio/reactivesearch-api:7.59.0
     restart: always
     environment:
       - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
@@ -50,7 +50,7 @@ services:
     links:
       - reactivesearch-config-gui
   fluentbit:
-    image: fluent/fluent-bit:1.5
+    image: fluent/fluent-bit:1.9.1
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf

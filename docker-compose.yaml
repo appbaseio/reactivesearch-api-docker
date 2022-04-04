@@ -2,7 +2,7 @@ version: "3.4"
 services:
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:7.58.0
+    image: appbaseio/reactivesearch-api:7.59.0
     restart: always
     command: --env="/reactivesearch-data/.env"
     depends_on:
@@ -27,7 +27,7 @@ services:
     links:
       - reactivesearch-config-gui
   fluentbit:
-    image: fluent/fluent-bit:1.5
+    image: fluent/fluent-bit:1.9.1
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
