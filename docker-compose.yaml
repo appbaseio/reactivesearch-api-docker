@@ -2,7 +2,7 @@ version: "3.4"
 services:
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:7.59.0
+    image: appbaseio/reactivesearch-api:8.0.0
     restart: always
     command: --env="/reactivesearch-data/.env"
     depends_on:

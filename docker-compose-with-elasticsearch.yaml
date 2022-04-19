@@ -23,7 +23,7 @@ services:
       - "9300:9300"
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:7.59.0
+    image: appbaseio/reactivesearch-api:8.0.0
     restart: always
     environment:
       - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
