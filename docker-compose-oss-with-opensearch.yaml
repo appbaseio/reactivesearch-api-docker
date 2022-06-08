@@ -1,77 +1,50 @@
-version: "3.4"
+version: '3'
 services:
   opensearch:
-    image: opensearchproject/opensearch:1.3.0
+    image: 'opensearchproject/opensearch:2.0.0'
     container_name: opensearch
     environment:
-        - plugins.security.disabled=true
-        - discovery.type=single-node
-        - http.port=9200
-        - http.cors.enabled=true
-        - http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
-        - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
-        - http.cors.allow-credentials=true
-        - bootstrap.memory_lock=true
-        - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - plugins.security.disabled=true
+      - discovery.type=single-node
+      - http.port=9200
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
-        - '9200:9200'
-        - '9300:9300'
+      - '9200:9200'
+      - '9300:9300'
     ulimits:
-        memlock:
-            soft: -1
-            hard: -1
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
-        - ./data:/usr/share/opensearch/data
+      - './data:/usr/share/opensearch/data'
   reactivesearch-api:
     container_name: rs-api
-    image: ghcr.io/appbaseio/reactivesearch-api:8.0.0
+    image: 'ghcr.io/appbaseio/reactivesearch-api:8.2.0.beta'
     restart: always
     depends_on:
-      - reactivesearch-config-gui
+      - opensearch
+    environment:
+      - 'ES_CLUSTER_URL=http://opensearch:9200'
+      - USERNAME=foo
+      - PASSWORD=bar
     volumes:
-      - reactivesearch-data:/reactivesearch-data
+      - 'reactivesearch-data:/reactivesearch-data'
     ports:
-      - 8000:8000
-  nginx:
-    container_name: appbase_nginx
-    image: nginx:1.17-alpine
-    restart: always
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/nginx.conf
-      - ./reactivesearch-logo.svg:/etc/nginx/html/reactivesearch-logo.svg
-      - ./nginx/certs:/etc/ssl/certs/
-      - ./nginx/error.html:/etc/nginx/html/50x.html
-      - www:/var/www/html
-    ports:
-      - 80:80
-      - 443:443
-    links:
-      - reactivesearch-config-gui
+      - '8000:8000'
   fluentbit:
-    image: fluent/fluent-bit:1.9.1
+    image: 'fluent/fluent-bit:1.9.4'
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
       - reactivesearch-api
-      - reactivesearch-config-gui
     restart: always
     volumes:
-      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - ./parser.conf:/fluent-bit/etc/parser.conf
-      - reactivesearch-data:/reactivesearch-data
-  reactivesearch-config-gui:
-    container_name: reactivesearch-config-gui
-    image: appbaseio/reactivesearch-config-gui:0.3.0
-    restart: always
-    volumes:
-      - reactivesearch-data:/reactivesearch-data
-      - www:/var/www/html
-      - /var/run/docker.sock:/var/run/docker.sock
+      - './fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf'
+      - './parser.conf:/fluent-bit/etc/parser.conf'
+      - 'reactivesearch-data:/reactivesearch-data'
 volumes:
   reactivesearch-data:
     external: false
     name: reactivesearch-data
-  www:
-    external: false
-    name: www

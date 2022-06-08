@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
     container_name: elasticsearch
     restart: always
     environment:
@@ -23,7 +23,7 @@ services:
       - elasticsearch
   reactivesearch-api:
     container_name: rs-api
-    image: ghcr.io/appbaseio/reactivesearch-api:8.0.0
+    image: ghcr.io/appbaseio/reactivesearch-api:8.2.0
     restart: always
     depends_on:
       - elasticsearch
@@ -40,7 +40,7 @@ services:
     networks:
       - elasticsearch
   fluentbit:
-    image: fluent/fluent-bit:1.9.1
+    image: fluent/fluent-bit:1.9.4
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
