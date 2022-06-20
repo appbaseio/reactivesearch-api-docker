@@ -25,11 +25,10 @@ This service helps in setting up reverse proxy for Arc Service and serving Confi
 
 The Elasticsearch service allows spinning up an Elasticsearch server instance locally. This is optional, however running this service allows for an end-to-end ReactiveSearch service setup.
 
-To run specific services only, use the following command:
+#### opensearch
 
-`docker-compose -f ${file} up -d`
+The OpenSearch service allows spinning up an OpenSearch server instance locally. This is an alteroptional, however running this service allows for an end-to-end ReactiveSearch service setup.
 
-where ${file} can be one of the following:
 
 | file                                                     | Use Case                                                                                                                                                       |
 |----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -39,6 +38,16 @@ where ${file} can be one of the following:
 | docker-compose-with-elasticsearch-without-nginx.yaml     | Run the licensed ReactiveSearch API server with Elasticsearch, but without Nginx and ReactiveSearch's config GUI.                                              |
 | docker-compose-with-elasticsearch.yaml                   | Run the licensed ReactiveSearch API server with Elasticsearch, Nginx and ReactiveSearch's config GUI.                                                          |
 | docker-compose.yaml                                      | Run the licensed ReactiveSearch API server with Nginx and ReactiveSearch's config GUI, but without Elasticsearch (i.e. it's assumed to be hosted in cloud).    |
+| docker-compose-oss-with-opensearch.yaml               | Run the open-source ReactiveSearch API server with OpenSearch, and Nginx.                     |
+| docker-compose-with-opensearch.yaml               | Run the open-source ReactiveSearch API server with OpenSearch, Nginx and ReactiveSearch's config GUI.                                                       |
+
+To run one of the above presets, use the following command:
+
+`docker-compose -f ${file} up -d`
+
+Similarly, `docker-compose -f ${file} down` will delete 
+
+where `${file}` is one of the above values.
 
 ## Quick Start 🚀
 
