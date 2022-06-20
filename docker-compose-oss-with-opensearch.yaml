@@ -1,7 +1,7 @@
 version: '3'
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.0.0'
+    image: 'opensearchproject/opensearch:2.0.1'
     container_name: opensearch
     environment:
       - plugins.security.disabled=true
@@ -11,7 +11,7 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
       - '9200:9200'
-      - '9300:9300'
+      - '9600:9600'
     ulimits:
       memlock:
         soft: -1
@@ -20,14 +20,14 @@ services:
       - './data:/usr/share/opensearch/data'
   reactivesearch-api:
     container_name: rs-api
-    image: 'ghcr.io/appbaseio/reactivesearch-api:8.2.0.beta'
+    image: 'ghcr.io/appbaseio/reactivesearch-api:8.3.0'
     restart: always
     depends_on:
       - opensearch
     environment:
       - 'ES_CLUSTER_URL=http://opensearch:9200'
-      - USERNAME=foo
-      - PASSWORD=bar
+      - USERNAME=rs-admin-user
+      - PASSWORD=rs-password
     volumes:
       - 'reactivesearch-data:/reactivesearch-data'
     ports:

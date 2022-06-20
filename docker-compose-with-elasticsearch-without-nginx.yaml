@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.3
     container_name: elasticsearch
     restart: always
     environment:
@@ -10,20 +10,20 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - http.port=9200
       - http.cors.enabled=true
-      - http.cors.allow-origin=*
       - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
       - http.cors.allow-credentials=true
       - network.publish_host=_local_
       - network.host=_local_,_site_
       - transport.host=127.0.0.1
       - http.host=0.0.0.0
+      - xpack.security.enabled=false
     ports:
       - "9200:9200"
     networks:
       - elasticsearch
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.2.0
+    image: appbaseio/reactivesearch-api:8.3.0
     restart: always
     depends_on:
       - elasticsearch
