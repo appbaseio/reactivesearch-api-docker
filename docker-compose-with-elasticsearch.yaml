@@ -21,6 +21,18 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+  zinc:
+    image: public.ecr.aws/zinclabs/zinc:latest
+    container_name: zinc
+    restart: always
+    environment:
+      - ZINC_FIRST_ADMIN_USER=admin
+      - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
+      - ZINC_DATA_PATH="/data"
+    ports:
+      - "4080:4080"
+    volumes:
+      - "zinc-data:/data"
   reactivesearch-api:
     container_name: rs-api
     image: appbaseio/reactivesearch-api:8.3.0
@@ -77,3 +89,6 @@ volumes:
   www:
     external: false
     name: www
+  zinc-data:
+    external: false
+    name: zinc-data
