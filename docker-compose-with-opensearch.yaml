@@ -20,7 +20,7 @@ services:
       - './data:/usr/share/opensearch/data'
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.3.0
+    image: appbaseio/reactivesearch-api:8.4.0
     restart: always
     environment:
       - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
