@@ -32,7 +32,7 @@ services:
       - "zinc-data:/data"
   reactivesearch-api:
     container_name: rs-api
-    image: 'ghcr.io/appbaseio/reactivesearch-api:8.3.0'
+    image: 'ghcr.io/appbaseio/reactivesearch-api:8.6.0'
     restart: always
     depends_on:
       - opensearch
