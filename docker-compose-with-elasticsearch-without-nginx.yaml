@@ -23,10 +23,11 @@ services:
       - elasticsearch
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.4.0
+    image: appbaseio/reactivesearch-api:8.6.0
     restart: always
     depends_on:
       - elasticsearch
+      - zinc
     environment:
       - USERNAME=foo
       - PASSWORD=bar
@@ -51,9 +52,27 @@ services:
       - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
       - "./parser.conf:/fluent-bit/etc/parser.conf"
       - "reactivesearch-data:/reactivesearch-data"
+  zinc:
+    image: public.ecr.aws/zinclabs/zinc:latest
+    container_name: zinc
+    restart: always
+    environment:
+      - ZINC_FIRST_ADMIN_USER=admin
+      - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
+      - ZINC_DATA_PATH="/data"
+    ports:
+      - "4080:4080"
+    volumes:
+      - "zinc-data:/data"
+    networks:
+      - zinc
 volumes:
   reactivesearch-data:
     external: false
+  zinc-data:
+    external: false
 networks:
   elasticsearch:
+    driver: bridge
+  zinc:
     driver: bridge

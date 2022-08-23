@@ -18,12 +18,25 @@ services:
         hard: -1
     volumes:
       - './data:/usr/share/opensearch/data'
+  zinc:
+    image: public.ecr.aws/zinclabs/zinc:latest
+    container_name: zinc
+    restart: always
+    environment:
+      - ZINC_FIRST_ADMIN_USER=admin
+      - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
+      - ZINC_DATA_PATH="/data"
+    ports:
+      - "4080:4080"
+    volumes:
+      - "zinc-data:/data"
   reactivesearch-api:
     container_name: rs-api
-    image: 'ghcr.io/appbaseio/reactivesearch-api:8.4.0'
+    image: 'ghcr.io/appbaseio/reactivesearch-api:8.6.0'
     restart: always
     depends_on:
       - opensearch
+      - zinc
     environment:
       - 'ES_CLUSTER_URL=http://opensearch:9200'
       - USERNAME=rs-admin-user
@@ -48,3 +61,5 @@ volumes:
   reactivesearch-data:
     external: false
     name: reactivesearch-data
+  zinc-data:
+    external: false

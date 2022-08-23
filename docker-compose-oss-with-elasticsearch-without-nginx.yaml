@@ -21,12 +21,27 @@ services:
       - "9200:9200"
     networks:
       - elasticsearch
+  zinc:
+    image: public.ecr.aws/zinclabs/zinc:latest
+    container_name: zinc
+    restart: always
+    environment:
+      - ZINC_FIRST_ADMIN_USER=admin
+      - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
+      - ZINC_DATA_PATH="/data"
+    ports:
+      - "4080:4080"
+    networks:
+      - zinc
+    volumes:
+      - "zinc-data:/data"
   reactivesearch-api:
     container_name: rs-api
-    image: ghcr.io/appbaseio/reactivesearch-api:8.4.0
+    image: ghcr.io/appbaseio/reactivesearch-api:8.6.0
     restart: always
     depends_on:
       - elasticsearch
+      - zinc
     environment:
       - USERNAME=foo
       - PASSWORD=bar
@@ -54,6 +69,10 @@ services:
 volumes:
   reactivesearch-data:
     external: false
+  zinc-data:
+    external: false
 networks:
   elasticsearch:
+    driver: bridge
+  network:
     driver: bridge

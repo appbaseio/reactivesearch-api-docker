@@ -2,10 +2,11 @@ version: "3.4"
 services:
   reactivesearch-api:
     container_name: rs-api
-    image: ghcr.io/appbaseio/reactivesearch-api:8.4.0
+    image: ghcr.io/appbaseio/reactivesearch-api:8.6.0
     restart: always
     depends_on:
       - reactivesearch-config-gui
+      - zinc
     volumes:
       - reactivesearch-data:/reactivesearch-data
     ports:
@@ -46,6 +47,18 @@ services:
       - reactivesearch-data:/reactivesearch-data
       - www:/var/www/html
       - /var/run/docker.sock:/var/run/docker.sock
+  zinc:
+    image: public.ecr.aws/zinclabs/zinc:latest
+    container_name: zinc
+    restart: always
+    environment:
+      - ZINC_FIRST_ADMIN_USER=admin
+      - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
+      - ZINC_DATA_PATH="/data"
+    ports:
+      - "4080:4080"
+    volumes:
+      - "zinc-data:/data"
 volumes:
   reactivesearch-data:
     external: false
@@ -53,3 +66,6 @@ volumes:
   www:
     external: false
     name: www
+  zinc-data:
+    external: false
+    name: zinc-data
