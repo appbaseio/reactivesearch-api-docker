@@ -1,7 +1,7 @@
 version: '3'
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.0.1'
+    image: 'opensearchproject/opensearch:2.6.0'
     container_name: opensearch
     environment:
       - plugins.security.disabled=true
@@ -32,7 +32,7 @@ services:
       - "zinc-data:/data"
   reactivesearch-api:
     container_name: rs-api
-    image: 'ghcr.io/appbaseio/reactivesearch-api:8.6.0'
+    image: 'ghcr.io/appbaseio/reactivesearch-api:8.12.1'
     restart: always
     depends_on:
       - opensearch
@@ -46,7 +46,7 @@ services:
     ports:
       - '8000:8000'
   fluentbit:
-    image: 'fluent/fluent-bit:1.9.4'
+    image: 'fluent/fluent-bit:1.9.10'
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
