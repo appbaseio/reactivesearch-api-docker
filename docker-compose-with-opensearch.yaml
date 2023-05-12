@@ -32,7 +32,7 @@ services:
       - "zinc-data:/data"
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.12.1
+    image: appbaseio/reactivesearch-api:8.13.0
     restart: always
     environment:
       - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
