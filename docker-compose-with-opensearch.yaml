@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.7.0'
+    image: 'opensearchproject/opensearch:2.8.0'
     container_name: opensearch
     environment:
       - plugins.security.disabled=true
@@ -32,7 +32,7 @@ services:
       - "zinc-data:/data"
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.13.0
+    image: appbaseio/reactivesearch-api:8.15.0
     restart: always
     environment:
       - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
