@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.8.0'
+    image: 'opensearchproject/opensearch:2.15.0'
     container_name: opensearch
     environment:
       - plugins.security.disabled=true
@@ -18,10 +18,14 @@ services:
         hard: -1
     volumes:
       - './data:/usr/share/opensearch/data'
+    networks:
+      - reactivesearch_network
+
   zinc:
     image: public.ecr.aws/zinclabs/zinc:latest
     container_name: zinc
     restart: always
+    user: root
     environment:
       - ZINC_FIRST_ADMIN_USER=admin
       - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
@@ -30,19 +34,27 @@ services:
       - "4080:4080"
     volumes:
       - "zinc-data:/data"
+    networks:
+      - reactivesearch_network
+
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.15.0
+    image: appbaseio/reactivesearch-api:8.22.5
     restart: always
     environment:
       - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
+      - USERNAME=rs-admin-user
+      - PASSWORD=rs-password
+      - APPBASE_ID=${ENTER_YOUR_APPBASE_ID}
+      - ES_CLUSTER_URL=http://opensearch:9200
     command: --env="/reactivesearch-data/.env" --log=info
-    depends_on:
-      - "reactivesearch-config-gui"
     volumes:
       - "reactivesearch-data:/reactivesearch-data"
     ports:
       - 8000:8000
+    networks:
+      - reactivesearch_network
+
   nginx:
     container_name: nginx
     image: nginx:1.17-alpine
@@ -56,8 +68,9 @@ services:
     ports:
       - 80:80
       - 443:443
-    links:
-      - reactivesearch-config-gui
+    networks:
+      - reactivesearch_network
+
   fluentbit:
     image: fluent/fluent-bit:1.9.10
     user: root
@@ -65,20 +78,14 @@ services:
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
       - "reactivesearch-api"
-      - "reactivesearch-config-gui"
     restart: always
     volumes:
       - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
       - "./parser.conf:/fluent-bit/etc/parser.conf"
       - "reactivesearch-data:/reactivesearch-data"
-  reactivesearch-config-gui:
-    container_name: reactivesearch-config-gui
-    image: appbaseio/reactivesearch-config-gui:0.3.1
-    restart: always
-    volumes:
-      - "reactivesearch-data:/reactivesearch-data"
-      - "www:/var/www/html"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - reactivesearch_network
+
 volumes:
   reactivesearch-data:
     external: false
@@ -89,3 +96,7 @@ volumes:
   zinc-data:
     external: false
     name: zinc-data
+
+networks:
+  reactivesearch_network:
+    driver: bridge

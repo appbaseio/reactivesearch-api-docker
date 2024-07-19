@@ -1,7 +1,7 @@
-version: '3'
+version: "3.4"
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.8.0'
+    image: 'opensearchproject/opensearch:2.15.0'
     container_name: opensearch
     environment:
       - plugins.security.disabled=true
@@ -18,10 +18,14 @@ services:
         hard: -1
     volumes:
       - './data:/usr/share/opensearch/data'
+    networks:
+      - reactivesearch_network
+
   zinc:
     image: public.ecr.aws/zinclabs/zinc:latest
     container_name: zinc
     restart: always
+    user: root
     environment:
       - ZINC_FIRST_ADMIN_USER=admin
       - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
@@ -30,21 +34,28 @@ services:
       - "4080:4080"
     volumes:
       - "zinc-data:/data"
+    networks:
+      - reactivesearch_network
+
   reactivesearch-api:
     container_name: rs-api
-    image: 'ghcr.io/appbaseio/reactivesearch-api:8.9.3'
+    image: appbaseio/reactivesearch-api:8.22.5.oss
     restart: always
     depends_on:
       - opensearch
       - zinc
     environment:
-      - 'ES_CLUSTER_URL=http://opensearch:9200'
+      - ES_CLUSTER_URL=http://opensearch:9200
+      - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
       - USERNAME=rs-admin-user
       - PASSWORD=rs-password
     volumes:
       - 'reactivesearch-data:/reactivesearch-data'
     ports:
       - '8000:8000'
+    networks:
+      - reactivesearch_network
+
   fluentbit:
     image: 'fluent/fluent-bit:1.9.10'
     user: root
@@ -57,9 +68,17 @@ services:
       - './fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf'
       - './parser.conf:/fluent-bit/etc/parser.conf'
       - 'reactivesearch-data:/reactivesearch-data'
+    networks:
+      - reactivesearch_network
+
 volumes:
   reactivesearch-data:
     external: false
     name: reactivesearch-data
   zinc-data:
     external: false
+    name: zinc-data
+
+networks:
+  reactivesearch_network:
+    driver: bridge

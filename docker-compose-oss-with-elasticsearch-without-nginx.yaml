@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
     container_name: elasticsearch
     restart: always
     environment:
@@ -20,11 +20,13 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - elasticsearch
+      - reactivesearch_network
+
   zinc:
     image: public.ecr.aws/zinclabs/zinc:latest
     container_name: zinc
     restart: always
+    user: root
     environment:
       - ZINC_FIRST_ADMIN_USER=admin
       - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
@@ -32,47 +34,51 @@ services:
     ports:
       - "4080:4080"
     networks:
-      - zinc
+      - reactivesearch_network
     volumes:
       - "zinc-data:/data"
+
   reactivesearch-api:
     container_name: rs-api
-    image: ghcr.io/appbaseio/reactivesearch-api:8.9.3
+    image: appbaseio/reactivesearch-api:8.22.5.oss
     restart: always
     depends_on:
       - elasticsearch
       - zinc
     environment:
-      - USERNAME=foo
-      - PASSWORD=bar
+      - USERNAME=rs-admin-user
+      - PASSWORD=rs-password
       - SET_SNIFFING=false
-      - APPBASE_ID=${ENTER_YOUR_APPBASE_ID}
       - ES_CLUSTER_URL=http://elasticsearch:9200
+      - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
     volumes:
       - "reactivesearch-data:/reactivesearch-data"
     ports:
       - 8000:8000
     networks:
-      - elasticsearch
+      - reactivesearch_network
+
   fluentbit:
     image: fluent/fluent-bit:1.9.10
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
-      - "reactivesearch-api"
+      - reactivesearch-api
     restart: always
     volumes:
       - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
       - "./parser.conf:/fluent-bit/etc/parser.conf"
       - "reactivesearch-data:/reactivesearch-data"
+    networks:
+      - reactivesearch_network
+
 volumes:
   reactivesearch-data:
     external: false
   zinc-data:
     external: false
+
 networks:
-  elasticsearch:
-    driver: bridge
-  network:
+  reactivesearch_network:
     driver: bridge

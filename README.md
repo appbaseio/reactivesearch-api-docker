@@ -8,14 +8,9 @@ The docker-compose setup in this repository comes with four different services:
 
 `reactivesearch-api` is an opensource image providing a declarative API to query Elasticsearch, and is required by ReactiveSearch and Searchbox UI libraries. You can check out the source code over [here](https://github.com/appbaseio/reactivesearch-api).
 
-It is also available as a licensed image with additional features such as search relevance, query rules, UI builder, pipelines, actionable search analytics and search access control. See [pricing](https://www.appbase.io/pricing).
+It is also available as a licensed image.
 
-
-> **Note:** Make sure your rs-api container has complete access to Elasticsearch. You can secure Elasticsearch URL with Basic Auth or set an IP based restriction.
-
-#### reactivesearch-config-gui
-
-The `reactivesearch-config-gui` service comes with simple user interface that allows you to set credentials and other reactivesearch-api server related environment variables. It also watches for environment variable file changes, so that if any variable in file is changed it can restart the rs-api container.
+> **Note:** Make sure your rs-api container has super user access to Elasticsearch. You can secure Elasticsearch URL with Basic Auth or set an IP based restriction.
 
 #### nginx
 
@@ -53,31 +48,31 @@ where `${file}` is one of the above values.
 
 The steps described here assumes a [docker](https://docs.docker.com/install/) installation on the system.
 
-> Note: If you have used arc-docker setup earlier, you might need to clear `www` volume to get fresh copy of arc configuration page. Please remove containers associated with `www` volume `docker container rm ContainerID` and then run `docker volume rm www`
+- **Step 1:** Get APPBASE_ID following the steps mentioned [here](https://docs.reactivesearch.io/docs/hosting/BYOC/#using-ami)
 
-- **Step 1:** Get Arc ID following the steps mentioned [here](https://docs.appbase.io/docs/hosting/BYOC/#using-ami)
+> Note: Skip this step when running in an open-source mode
 
 - **Step 2:** Clone the repository
 
   ```bash
-  git clone https://github.com/appbaseio/arc-dockerized.git && cd arc-dockerized
+  git clone https://github.com/appbaseio/reactivesearch-api-docker.git && cd reactivesearch-api-docker
   ```
 
 - **Step 3:** Configure logging system
 
-  Arc internally uses [Fluentbit](https://fluentbit.io/) to log the requests and provide analytics on top of that. In order to setup fluentbit, update `fluent-bit.conf` with Elasticsearch `Host`, `Port`, `tls`, `HTTP_User` and `HTTP_Passwd` information.
+  ReactiveSearch API uses [Fluentbit](https://fluentbit.io/) to log the requests and provide analytics on top of that. In order to setup fluentbit, update `fluent-bit.conf` with Elasticsearch `Host`, `Port`, `tls`, `HTTP_User` and `HTTP_Passwd` information.
 
   ![](https://www.dropbox.com/s/ucaj3gtdj331j9v/Screenshot%202020-07-01%2011.49.34.png?raw=1)
 
-  > **Note:** If you are using `docker-compose-with-elasticsearch.yaml` then you don't need to change any configurations in
+  > **Note:** If you are using `docker-compose-with-elasticsearch.yaml` then you don't need to change any configurations in here.
 
 * **Step 4:** Build and run docker containers
 
-  We highly recommend using Arc with [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) so that we can easily bind this with Arc Dashboard. To simplify the process of docker build, test and deployment we have created 2 versions:
+  We highly recommend using ReactiveSearch API with [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) so that we can easily bind this with ReactiveSearch Dashboard. To simplify the process of docker build, test and deployment we have created 2 versions:
 
-  1 - **Install Arc + Nginx with SSL setup _(Recommended for production)_**
+  1 - **Install ReactiveSearch API + Nginx with TLS setup _(Recommended for production)_**
 
-  - Change [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and keys with production files. Please obtain [SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and key for your domain using [Let's Encrypt](https://letsencrypt.org/) or any other provider. Update the files in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs)
+  - Change [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and keys with production files. Please obtain [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and key for your domain using [Let's Encrypt](https://letsencrypt.org/) or any other provider. Update the files in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs)
   - In case you are using different name then mentioned in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs) folder, then please update them in `docker-compose.yaml` file as well
 
   ![](https://i.imgur.com/piUKTLl.png)
@@ -90,7 +85,7 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
   docker-compose up -d
   ```
 
-  2 - **Install Arc + Elasticsearch _(If you want to deploy Arc Along with Elasticsearch.)_**
+  2 - **Install ReactiveSearch API + Elasticsearch _(If you want to deploy ReactiveSearch API Along with Elasticsearch.)_**
 
   ```
   docker-compose -f docker-compose-with-elasticsearch.yaml up -d
@@ -104,18 +99,18 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
 * **Step 6:** Set credentials
 
-* **Step 7:** Configure Elasticsearch URL and ARC ID obtained above.
+* **Step 7:** Configure Elasticsearch URL and APPBASE_ID obtained above.
 
-  > **Note:** Once you save the configuration, it may take 5-10s to restart the arc service.
+  > **Note:** Once you save the configuration, it may take 5-10s to restart the reactivesearch-api service.
 
-* **Step 8:** Start using Arc Services using [Arc Dashboard](https://arc-dashboard.appbase.io/). Here you will have to input Arc Cluster URL which will be [http://localhost](http://localhost) and credentials would be the one that you configured initially on **Step 5**.
+* **Step 8:** Start using ReactiveSearch API using [ReactiveSearch Dashboard](https://dashboard.reactivesearch.io/). Here you will have to input Arc Cluster URL which will be [http://localhost](http://localhost) and credentials would be the one that you configured initially on **Step 5**.
 
 ## Configuring TLS for development
 
 We recommend configuring TLS using the excellent [`mkcert`](https://github.com/FiloSottile/mkcert) utility. Once installed on your local system:
 
 ```bash
-mkcert -key-file=nginx/certs/server.key -cert-file=nginx/certs/server.crt appbase.dev localhost
+mkcert -key-file=nginx/certs/server.key -cert-file=nginx/certs/server.crt reactivesearch.dev localhost
 ```
 
 This will save the cert key and pem files into paths that are used by the nginx service in the `docker-compose-with-elasticsearch.yaml` file.
@@ -126,10 +121,10 @@ Once the certs are configured, start the service with:
 docker-compose -f docker-compose-with-elasticsearch.yaml up -d
 ```
 
-You can now visit: https://localhost to get a TLS domain. For https://appbase.dev to point to appbase.io service, add the entry:
+You can now visit: https://localhost to get a TLS domain. For https://reactivesearch.dev to point to reactivesearch.io service, add the entry:
 
 ```
-127.0.0.1    appbase.dev
+127.0.0.1    reactivesearch.dev
 ```
 
 in your `/etc/hosts` file.

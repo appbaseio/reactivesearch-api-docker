@@ -2,19 +2,26 @@ version: "3.4"
 services:
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.15.0
+    image: appbaseio/reactivesearch-api:8.22.5
     restart: always
-    command: --env="/reactivesearch-data/.env"
-    depends_on:
-      - "reactivesearch-config-gui"
+    environment:
+      - ES_CLUSTER_URL=http://elasticsearch:9200
+      - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
+      - USERNAME=rs-admin-user
+      - PASSWORD=rs-password
+      - APPBASE_ID=${ENTER_YOUR_APPBASE_ID}
     volumes:
       - "reactivesearch-data:/reactivesearch-data"
     ports:
       - 8000:8000
+    networks:
+      - reactivesearch_network
+
   zinc:
     image: public.ecr.aws/zinclabs/zinc:latest
     container_name: zinc
     restart: always
+    user: root
     environment:
       - ZINC_FIRST_ADMIN_USER=admin
       - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
@@ -23,6 +30,9 @@ services:
       - "4080:4080"
     volumes:
       - "zinc-data:/data"
+    networks:
+      - reactivesearch_network
+
   nginx:
     container_name: appbase_nginx
     image: nginx:1.17-alpine
@@ -36,8 +46,9 @@ services:
     ports:
       - 80:80
       - 443:443
-    links:
-      - reactivesearch-config-gui
+    networks:
+      - reactivesearch_network
+
   fluentbit:
     image: fluent/fluent-bit:1.9.4
     user: root
@@ -45,20 +56,14 @@ services:
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
       - "reactivesearch-api"
-      - "reactivesearch-config-gui"
     restart: always
     volumes:
       - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
       - "./parser.conf:/fluent-bit/etc/parser.conf"
       - "reactivesearch-data:/reactivesearch-data"
-  reactivesearch-config-gui:
-    container_name: reactivesearch-config-gui
-    image: appbaseio/arc-config:0.2.8
-    restart: always
-    volumes:
-      - "reactivesearch-data:/reactivesearch-data"
-      - "www:/var/www/html"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - reactivesearch_network
+
 volumes:
   reactivesearch-data:
     external: false
@@ -69,3 +74,7 @@ volumes:
   zinc-data:
     external: false
     name: zinc-data
+
+networks:
+  reactivesearch_network:
+    driver: bridge
