@@ -1,4 +1,4 @@
-# Appbase.io: Dockerize Setup
+# ReactiveSearch.io: Dockerize Setup
 
 This setup enables you to run [ReactiveSearch API server](https://reactivesearch.io/) with single command, i.e. `docker-compose up -d` 😎.
 
