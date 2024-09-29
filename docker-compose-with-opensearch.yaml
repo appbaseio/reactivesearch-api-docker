@@ -1,10 +1,10 @@
 version: "3.4"
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.15.0'
+    image: 'opensearchproject/opensearch:2.17.0'
     container_name: opensearch
     environment:
-      - plugins.security.disabled=true
+      - 'DISABLE_SECURITY_PLUGIN=true'
       - discovery.type=single-node
       - http.port=9200
       - bootstrap.memory_lock=true
