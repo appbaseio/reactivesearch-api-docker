@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.18.0'
+    image: 'opensearchproject/opensearch:2.19.3'
     container_name: opensearch
     environment:
       - 'DISABLE_SECURITY_PLUGIN=true'
@@ -39,7 +39,7 @@ services:
 
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.22.5
+    image: appbaseio/reactivesearch-api:8.24.3
     restart: always
     environment:
       - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
@@ -47,6 +47,7 @@ services:
       - PASSWORD=rs-password
       - APPBASE_ID=${ENTER_YOUR_APPBASE_ID}
       - ES_CLUSTER_URL=http://opensearch:9200
+      - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
     command: --env="/reactivesearch-data/.env" --log=info
     volumes:
       - "reactivesearch-data:/reactivesearch-data"

@@ -39,7 +39,7 @@ services:
 
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.23.0.oss
+    image: appbaseio/reactivesearch-api:8.24.2.oss
     restart: always
     depends_on:
       - opensearch

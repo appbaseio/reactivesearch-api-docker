@@ -2,7 +2,7 @@ version: "3.4"
 services:
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.22.5
+    image: appbaseio/reactivesearch-api:8.24.3
     restart: always
     environment:
       - ES_CLUSTER_URL=http://elasticsearch:9200
@@ -50,7 +50,7 @@ services:
       - reactivesearch_network
 
   fluentbit:
-    image: fluent/fluent-bit:1.9.4
+    image: fluent/fluent-bit:1.9.10
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
