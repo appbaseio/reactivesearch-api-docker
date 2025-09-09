@@ -1,12 +1,16 @@
 version: "3.4"
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.19.3'
+    image: 'opensearchproject/opensearch:3.2.0'
     container_name: opensearch
     environment:
       - 'DISABLE_SECURITY_PLUGIN=true'
       - discovery.type=single-node
       - http.port=9200
+      - "http.cors.allow-origin=*"
+      - http.cors.enabled=true
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
       - bootstrap.memory_lock=true
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
@@ -39,13 +43,13 @@ services:
 
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.24.3
+    image: appbaseio/reactivesearch-api:9.0.0
     restart: always
     environment:
       - PIPELINE_LOG_FILE_PATH=/reactivesearch-data/pipeline.json
       - USERNAME=rs-admin-user
       - PASSWORD=rs-password
-      - APPBASE_ID=${ENTER_YOUR_APPBASE_ID}
+      - REACTIVESEARCH_ID=${ENTER_YOUR_REACTIVESEARCH_ID}
       - ES_CLUSTER_URL=http://opensearch:9200
       - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
     command: --env="/reactivesearch-data/.env" --log=info
@@ -58,7 +62,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx:1.17-alpine
+    image: nginx:1.29-alpine   # or: nginx:stable-alpine
     restart: always
     volumes:
       - ./nginx/default.conf:/etc/nginx/nginx.conf
@@ -67,23 +71,24 @@ services:
       - ./nginx/error.html:/etc/nginx/html/50x.html
       - "www:/var/www/html"
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     networks:
       - reactivesearch_network
 
   fluentbit:
-    image: fluent/fluent-bit:1.9.10
+    image: fluent/fluent-bit:4.0.8
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
     depends_on:
-      - "reactivesearch-api"
+      - reactivesearch-api
     restart: always
     volumes:
-      - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
-      - "./parser.conf:/fluent-bit/etc/parser.conf"
+      - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro"
+      - "./parser.conf:/fluent-bit/etc/parsers.conf:ro"
       - "reactivesearch-data:/reactivesearch-data"
+      - "fluent-bit-state:/fluent-bit/state"
     networks:
       - reactivesearch_network
 
@@ -97,6 +102,9 @@ volumes:
   zinc-data:
     external: false
     name: zinc-data
+  fluent-bit-state:
+    external: false
+    name: fluent-bit-state
 
 networks:
   reactivesearch_network:

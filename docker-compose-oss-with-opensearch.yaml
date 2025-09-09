@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   opensearch:
-    image: 'opensearchproject/opensearch:2.18.0'
+    image: 'opensearchproject/opensearch:3.2.0'
     container_name: opensearch
     environment:
       - 'DISABLE_SECURITY_PLUGIN=true'
@@ -39,7 +39,7 @@ services:
 
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:8.24.2.oss
+    image: appbaseio/reactivesearch-api:9.0.0.oss
     restart: always
     depends_on:
       - opensearch
@@ -57,7 +57,7 @@ services:
       - reactivesearch_network
 
   fluentbit:
-    image: 'fluent/fluent-bit:1.9.10'
+    image: fluent/fluent-bit:4.0.8
     user: root
     container_name: fluentbit
     command: /fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf
@@ -65,9 +65,10 @@ services:
       - reactivesearch-api
     restart: always
     volumes:
-      - './fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf'
-      - './parser.conf:/fluent-bit/etc/parser.conf'
-      - 'reactivesearch-data:/reactivesearch-data'
+      - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro"
+      - "./parser.conf:/fluent-bit/etc/parsers.conf:ro"
+      - "reactivesearch-data:/reactivesearch-data"
+      - "fluent-bit-state:/fluent-bit/state"
     networks:
       - reactivesearch_network
 
@@ -78,6 +79,9 @@ volumes:
   zinc-data:
     external: false
     name: zinc-data
+  fluent-bit-state:
+    external: false
+    name: fluent-bit-state
 
 networks:
   reactivesearch_network:
