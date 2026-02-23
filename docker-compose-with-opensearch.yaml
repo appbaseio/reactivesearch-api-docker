@@ -25,22 +25,6 @@ services:
     networks:
       - reactivesearch_network
 
-  zinc:
-    image: public.ecr.aws/zinclabs/zinc:latest
-    container_name: zinc
-    restart: always
-    user: root
-    environment:
-      - ZINC_FIRST_ADMIN_USER=admin
-      - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
-      - ZINC_DATA_PATH="/data"
-    ports:
-      - "4080:4080"
-    volumes:
-      - "zinc-data:/data"
-    networks:
-      - reactivesearch_network
-
   reactivesearch-api:
     container_name: rs-api
     image: appbaseio/reactivesearch-api:9.2.0
@@ -50,7 +34,6 @@ services:
       - USERNAME=rs-admin-user
       - PASSWORD=rs-password
       - ES_CLUSTER_URL=http://opensearch:9200
-      - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
     command: --env="/reactivesearch-data/.env" --log=info
     volumes:
       - "reactivesearch-data:/reactivesearch-data"
@@ -98,9 +81,6 @@ volumes:
   www:
     external: false
     name: www
-  zinc-data:
-    external: false
-    name: zinc-data
   fluent-bit-state:
     external: false
     name: fluent-bit-state

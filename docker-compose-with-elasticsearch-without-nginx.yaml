@@ -28,13 +28,11 @@ services:
     restart: always
     depends_on:
       - elasticsearch
-      - zinc
     environment:
       - USERNAME=rs-admin-user
       - PASSWORD=rs-password
       - SET_SNIFFING=false
       - ES_CLUSTER_URL=http://elasticsearch:9200
-      - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
     volumes:
       - "reactivesearch-data:/reactivesearch-data"
     ports:
@@ -58,26 +56,8 @@ services:
     networks:
       - reactivesearch_network
 
-  zinc:
-    image: public.ecr.aws/zinclabs/zinc:latest
-    container_name: zinc
-    restart: always
-    user: root
-    environment:
-      - ZINC_FIRST_ADMIN_USER=admin
-      - ZINC_FIRST_ADMIN_PASSWORD=Complexpass#123
-      - ZINC_DATA_PATH="/data"
-    ports:
-      - "4080:4080"
-    volumes:
-      - "zinc-data:/data"
-    networks:
-      - reactivesearch_network
-
 volumes:
   reactivesearch-data:
-    external: false
-  zinc-data:
     external: false
   fluent-bit-state:
     external: false
