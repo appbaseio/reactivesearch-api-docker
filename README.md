@@ -6,9 +6,9 @@ The docker-compose setup in this repository comes with four different services:
 
 #### reactivesearch-api
 
-`reactivesearch-api` is an opensource image providing a declarative API to query Elasticsearch, and is required by ReactiveSearch and Searchbox UI libraries. You can check out the source code over [here](https://github.com/appbaseio/reactivesearch-api).
+`reactivesearch-api` is an open-source image providing a declarative API to query Elasticsearch, and is required by ReactiveSearch and Searchbox UI libraries. You can check out the source code over [here](https://github.com/appbaseio/reactivesearch-api).
 
-It is also available as a licensed image.
+Starting with v9.2.0, only the open-source image is published.
 
 > **Note:** Make sure your rs-api container has super user access to Elasticsearch. You can secure Elasticsearch URL with Basic Auth or set an IP based restriction.
 
@@ -24,23 +24,18 @@ The Elasticsearch service allows spinning up an Elasticsearch server instance lo
 
 The OpenSearch service allows spinning up an OpenSearch server instance locally. This is an alteroptional, however running this service allows for an end-to-end ReactiveSearch service setup.
 
-
-| file                                                     | Use Case                                                                                                                                                       |
-|----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| docker-compose-oss-with-elasticsearch-without-nginx.yaml | Run the open-source ReactiveSearch API server with Elasticsearch, but without Nginx and ReactiveSearch's config GUI.                                           |
-| docker-compose-oss-with-elasticsearch.yaml               | Run the open-source ReactiveSearch API server with Elasticsearch, Nginx and ReactiveSearch's config GUI.                                                       |
-| docker-compose-oss.yaml                                  | Run the open-source ReactiveSearch API server with Nginx and ReactiveSearch's config GUI, but without Elasticsearch (i.e. it's assumed to be hosted in cloud). |
-| docker-compose-with-elasticsearch-without-nginx.yaml     | Run the licensed ReactiveSearch API server with Elasticsearch, but without Nginx and ReactiveSearch's config GUI.                                              |
-| docker-compose-with-elasticsearch.yaml                   | Run the licensed ReactiveSearch API server with Elasticsearch, Nginx and ReactiveSearch's config GUI.                                                          |
-| docker-compose.yaml                                      | Run the licensed ReactiveSearch API server with Nginx and ReactiveSearch's config GUI, but without Elasticsearch (i.e. it's assumed to be hosted in cloud).    |
-| docker-compose-oss-with-opensearch.yaml               | Run the open-source ReactiveSearch API server with OpenSearch, and Nginx.                     |
-| docker-compose-with-opensearch.yaml               | Run the open-source ReactiveSearch API server with OpenSearch, Nginx and ReactiveSearch's config GUI.                                                       |
+| file                                                 | Use Case                                                                                                                                |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| docker-compose-with-elasticsearch-without-nginx.yaml | Run ReactiveSearch API with Elasticsearch, but without Nginx and ReactiveSearch's config GUI.                                           |
+| docker-compose-with-elasticsearch.yaml               | Run ReactiveSearch API with Elasticsearch, Nginx and ReactiveSearch's config GUI.                                                       |
+| docker-compose.yaml                                  | Run ReactiveSearch API with Nginx and ReactiveSearch's config GUI, but without Elasticsearch (i.e. it's assumed to be hosted in cloud). |
+| docker-compose-with-opensearch.yaml                  | Run ReactiveSearch API with OpenSearch, Nginx and ReactiveSearch's config GUI.                                                          |
 
 To run one of the above presets, use the following command:
 
 `docker-compose -f ${file} up -d`
 
-Similarly, `docker-compose -f ${file} down` will delete 
+Similarly, `docker-compose -f ${file} down` will delete
 
 where `${file}` is one of the above values.
 
@@ -48,17 +43,13 @@ where `${file}` is one of the above values.
 
 The steps described here assumes a [docker](https://docs.docker.com/install/) installation on the system.
 
-- **Step 1:** Get APPBASE_ID following the steps mentioned [here](https://docs.reactivesearch.io/docs/hosting/BYOC/#using-ami)
-
-> Note: Skip this step when running in an open-source mode
-
-- **Step 2:** Clone the repository
+- **Step 1:** Clone the repository
 
   ```bash
   git clone https://github.com/appbaseio/reactivesearch-api-docker.git && cd reactivesearch-api-docker
   ```
 
-- **Step 3:** Configure logging system
+- **Step 2:** Configure logging system
 
   ReactiveSearch API uses [Fluentbit](https://fluentbit.io/) to log the requests and provide analytics on top of that. In order to setup fluentbit, update `fluent-bit.conf` with Elasticsearch `Host`, `Port`, `tls`, `HTTP_User` and `HTTP_Passwd` information.
 
@@ -66,12 +57,11 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
   > **Note:** If you are using `docker-compose-with-elasticsearch.yaml` then you don't need to change any configurations in here.
 
-* **Step 4:** Build and run docker containers
+* **Step 3:** Build and run docker containers
 
   We highly recommend using ReactiveSearch API with [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) so that we can easily bind this with ReactiveSearch Dashboard. To simplify the process of docker build, test and deployment we have created 2 versions:
 
   1 - **Install ReactiveSearch API + Nginx with TLS setup _(Recommended for production)_**
-
   - Change [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and keys with production files. Please obtain [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security) certificate and key for your domain using [Let's Encrypt](https://letsencrypt.org/) or any other provider. Update the files in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs)
   - In case you are using different name then mentioned in [nginx/certs](https://github.com/appbaseio/arc-dockerized/tree/master/nginx/certs) folder, then please update them in `docker-compose.yaml` file as well
 
@@ -93,17 +83,17 @@ The steps described here assumes a [docker](https://docs.docker.com/install/) in
 
   🔥 Thats all, our containers should be up and running. Next let us configure environment variables required by Arc service.
 
-* **Step 5:** Open configuration service URL in your browser, i.e. [http://localhost](http://localhost)
+* **Step 4:** Open configuration service URL in your browser, i.e. [http://localhost](http://localhost)
 
   > **Note:** If you are running this setup on an virtual machine, make sure ports `80` and `443` are set in your inbound rules for the cluster.
 
-* **Step 6:** Set credentials
+* **Step 5:** Set credentials
 
-* **Step 7:** Configure Elasticsearch URL and APPBASE_ID obtained above.
+* **Step 6:** Configure Elasticsearch URL.
 
   > **Note:** Once you save the configuration, it may take 5-10s to restart the reactivesearch-api service.
 
-* **Step 8:** Start using ReactiveSearch API using [ReactiveSearch Dashboard](https://dashboard.reactivesearch.io/). Here you will have to input Arc Cluster URL which will be [http://localhost](http://localhost) and credentials would be the one that you configured initially on **Step 5**.
+* **Step 7:** Start using ReactiveSearch API using [ReactiveSearch Dashboard](https://dashboard.reactivesearch.io/). Here you will have to input Arc Cluster URL which will be [http://localhost](http://localhost) and credentials would be the one that you configured initially on **Step 4**.
 
 ## Configuring TLS for development
 

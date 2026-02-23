@@ -2,14 +2,13 @@ version: "3.4"
 services:
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:9.0.0
+    image: appbaseio/reactivesearch-api:9.2.0
     restart: always
     environment:
       - ES_CLUSTER_URL=http://elasticsearch:9200
       - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
       - USERNAME=rs-admin-user
       - PASSWORD=rs-password
-      - REACTIVESEARCH_ID=${ENTER_YOUR_REACTIVESEARCH_ID}
     volumes:
       - "reactivesearch-data:/reactivesearch-data"
     ports:
@@ -35,7 +34,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx:1.29-alpine   # or: nginx:stable-alpine
+    image: nginx:1.29-alpine # or: nginx:stable-alpine
     restart: always
     volumes:
       - ./nginx/default.conf:/etc/nginx/nginx.conf

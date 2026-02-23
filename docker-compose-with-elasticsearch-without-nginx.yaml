@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.0
     container_name: elasticsearch
     restart: always
     environment:
@@ -24,7 +24,7 @@ services:
 
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:9.0.0
+    image: appbaseio/reactivesearch-api:9.2.0
     restart: always
     depends_on:
       - elasticsearch
@@ -33,7 +33,6 @@ services:
       - USERNAME=rs-admin-user
       - PASSWORD=rs-password
       - SET_SNIFFING=false
-      - REACTIVESEARCH_ID=${ENTER_YOUR_REACTIVESEARCH_ID}
       - ES_CLUSTER_URL=http://elasticsearch:9200
       - ZINC_CLUSTER_URL=http://admin:Complexpass#123@zinc:4080
     volumes:
