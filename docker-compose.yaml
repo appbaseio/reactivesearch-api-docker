@@ -2,7 +2,7 @@ version: "3.4"
 services:
   reactivesearch-api:
     container_name: rs-api
-    image: appbaseio/reactivesearch-api:9.2.0
+    image: appbaseio/reactivesearch-api:9.3.0
     restart: always
     environment:
       - ES_CLUSTER_URL=http://elasticsearch:9200
