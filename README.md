@@ -2,6 +2,25 @@
 
 This setup enables you to run [ReactiveSearch API server](https://reactivesearch.io/) with single command, i.e. `docker-compose up -d` 😎.
 
+## Deploy to Render
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/appbaseio/reactivesearch-api-docker)
+
+Deploy ReactiveSearch API to [Render](https://render.com) with the included [`render.yaml`](render.yaml) blueprint. Pair it with a free [Aiven OpenSearch](https://aiven.io/free-opensearch) instance for an easy prototyping stack:
+
+1. Create a free OpenSearch service on Aiven and copy the service URI (credentials are included in the URL).
+2. Click **Deploy to Render** above and connect your GitHub account.
+3. When prompted, set **ES_CLUSTER_URL** to your Aiven OpenSearch URI, and choose **USERNAME** / **PASSWORD** for ReactiveSearch API access.
+4. After deploy, use the Render service URL as your Arc cluster URL in the [ReactiveSearch Dashboard](https://dashboard.reactivesearch.io/).
+
+Starting with v9.4.0, ReactiveSearch API supports `RS_SETUP_PROFILE` to control shard footprint and which plugins are installed at startup. The blueprint defaults to `minimal`, which keeps resource usage low on Render's free tier. Render does not support dropdown hints or descriptions for environment variables during the deploy flow; you can change `RS_SETUP_PROFILE` later under **Environment** in the Render dashboard:
+
+| Value | Use when |
+| --- | --- |
+| `minimal` | Prototyping on free hosting — essential plugins only, smallest shard footprint |
+| `standard` | Typical development — core search, analytics, and pipeline features |
+| `full` | Production-like setups — all optional plugins and indices |
+
 The docker-compose setup in this repository comes with four different services:
 
 #### reactivesearch-api
